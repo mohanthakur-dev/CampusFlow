@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Lab Records | CampusFlow</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        CampusFlow
+    </div>
+
+
+    <nav>
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/assignments">
+            Assignments
+        </a>
+
+        <a href="/lab-records">
+            Lab Records
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<main>
+
+
+    <!-- PAGE HEADER -->
+
+    <section class="page-header">
+
+        <p class="tag">
+            PRACTICAL WORK
+        </p>
+
+
+        <h1>
+            Lab Records
+        </h1>
+
+
+        <p class="subtitle">
+            Keep track of your lab experiments,
+            deadlines and submission status.
+        </p>
+
+
+        <button
+            onclick="showForm()"
+            class="add-button">
+
+            + Add Experiment
+
+        </button>
+
+    </section>
+
+
+
+    <!-- ADD EXPERIMENT FORM -->
+
+    <section
+        id="lab-form"
+        class="form-box">
+
+
+        <h2>
+            Add New Experiment
+        </h2>
+
+
+        <form
+            action="/add_lab_record"
+            method="POST">
+
+
+            <input
+                type="text"
+                name="subject"
+                placeholder="Subject"
+                required>
+
+
+            <input
+                type="text"
+                name="experiment"
+                placeholder="Experiment title"
+                required>
+
+
+            <input
+                type="date"
+                name="deadline"
+                required>
+
+
+            <div class="form-buttons">
+
+
+                <button type="submit">
+                    Add Experiment
+                </button>
+
+
+                <button
+                    type="button"
+                    onclick="hideForm()"
+                    class="cancel-button">
+
+                    Cancel
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </section>
+
+
+
+    <!-- LAB RECORD LIST -->
+
+    <section class="assignment-list">
+
+
+        {% if lab_records %}
+
+
+            {% for lab in lab_records %}
+
+
+            <div class="assignment-card">
+
+
+                <div>
+
+                    <h2>
+
+                        {{ lab["subject"] }}
+                        -
+                        {{ lab["experiment"] }}
+
+                    </h2>
+
+
+                    <p>
+
+                        Deadline:
+                        {{ lab["deadline"] }}
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- ACTION BUTTONS -->
+
+                <div class="assignment-actions">
+
+
+                    <!-- STATUS -->
+
+                    <form
+                        action="/toggle_lab_record/{{ lab['id'] }}"
+                        method="POST">
+
+
+                        {% if lab["status"] == "Pending" %}
+
+
+                            <button
+                                type="submit"
+                                class="pending-button">
+
+                                Pending
+
+                            </button>
+
+
+                        {% else %}
+
+
+                            <button
+                                type="submit"
+                                class="completed-button">
+
+                                ✓ Completed
+
+                            </button>
+
+
+                        {% endif %}
+
+
+                    </form>
+
+
+
+                    <!-- DELETE -->
+
+                    <form
+                        action="/delete_lab_record/{{ lab['id'] }}"
+                        method="POST"
+                        onsubmit="return confirm('Delete this experiment?');">
+
+
+                        <button
+                            type="submit"
+                            class="delete-button">
+
+                            🗑 Delete
+
+                        </button>
+
+
+                    </form>
+
+
+                </div>
+
+
+            </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="assignment-card">
+
+                <div>
+
+                    <h2>
+                        No experiments yet
+                    </h2>
+
+                    <p>
+                        Click "+ Add Experiment" to add your first lab record.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+
+function showForm() {
+
+    document.getElementById("lab-form").style.display = "block";
+
+}
+
+
+function hideForm() {
+
+    document.getElementById("lab-form").style.display = "none";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

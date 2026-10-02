@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Previous Papers | CampusFlow</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        CampusFlow
+    </div>
+
+
+    <nav>
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/assignments">
+            Assignments
+        </a>
+
+        <a href="/lab-records">
+            Lab Records
+        </a>
+
+        <a href="/resources">
+            Resources
+        </a>
+
+        <a href="/class-updates">
+            Updates
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<main>
+
+
+    <section class="page-header">
+
+        <p class="tag">
+            EXAM PREPARATION
+        </p>
+
+        <h1>
+            Previous Papers
+        </h1>
+
+        <p class="subtitle">
+            Keep previous year question papers organized
+            and access them whenever you need them.
+        </p>
+
+        <button
+            onclick="showForm()"
+            class="add-button">
+
+            + Add Previous Paper
+
+        </button>
+
+    </section>
+
+
+
+    <!-- ADD PAPER FORM -->
+
+    <section
+        id="paper-form"
+        class="form-box">
+
+
+        <h2>
+            Add Previous Paper
+        </h2>
+
+
+        <form
+            action="/add_previous_paper"
+            method="POST">
+
+
+            <input
+                type="text"
+                name="subject"
+                placeholder="Subject"
+                required>
+
+
+            <input
+                type="text"
+                name="year"
+                placeholder="Year (Example: 2025)"
+                required>
+
+
+            <select
+                name="semester"
+                required>
+
+                <option value="">
+                    Select Semester
+                </option>
+
+                <option value="Semester 1">
+                    Semester 1
+                </option>
+
+                <option value="Semester 2">
+                    Semester 2
+                </option>
+
+                <option value="Semester 3">
+                    Semester 3
+                </option>
+
+                <option value="Semester 4">
+                    Semester 4
+                </option>
+
+                <option value="Semester 5">
+                    Semester 5
+                </option>
+
+                <option value="Semester 6">
+                    Semester 6
+                </option>
+
+                <option value="Semester 7">
+                    Semester 7
+                </option>
+
+                <option value="Semester 8">
+                    Semester 8
+                </option>
+
+            </select>
+
+
+            <select
+                name="exam_type"
+                required>
+
+                <option value="">
+                    Select Exam Type
+                </option>
+
+                <option value="End Semester">
+                    End Semester
+                </option>
+
+                <option value="Internal">
+                    Internal
+                </option>
+
+                <option value="Model Exam">
+                    Model Exam
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Paper title"
+                required>
+
+
+            <input
+                type="url"
+                name="link"
+                placeholder="PDF / Google Drive link">
+
+
+            <div class="form-buttons">
+
+
+                <button type="submit">
+                    Add Paper
+                </button>
+
+
+                <button
+                    type="button"
+                    onclick="hideForm()"
+                    class="cancel-button">
+
+                    Cancel
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+    </section>
+
+
+
+    <!-- PAPERS LIST -->
+
+    <section class="assignment-list">
+
+
+        {% if papers %}
+
+
+            {% for paper in papers %}
+
+
+            <div class="assignment-card">
+
+
+                <div>
+
+                    <p class="tag">
+                        {{ paper["year"] }}
+                        ·
+                        {{ paper["semester"] }}
+                        ·
+                        {{ paper["exam_type"] }}
+                    </p>
+
+
+                    <h2>
+                        {{ paper["subject"] }}
+                        -
+                        {{ paper["title"] }}
+                    </h2>
+
+
+                    {% if paper["link"] %}
+
+                    <p>
+
+                        <a
+                            href="{{ paper['link'] }}"
+                            target="_blank">
+
+                            Open Question Paper →
+
+                        </a>
+
+                    </p>
+
+                    {% else %}
+
+                    <p>
+                        No paper link added.
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <form
+                    action="/delete_previous_paper/{{ paper['id'] }}"
+                    method="POST"
+                    onsubmit="return confirm('Delete this previous paper?');">
+
+
+                    <button
+                        type="submit"
+                        class="delete-button">
+
+                        🗑 Delete
+
+                    </button>
+
+
+                </form>
+
+
+            </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="assignment-card">
+
+                <div>
+
+                    <h2>
+                        No previous papers yet
+                    </h2>
+
+                    <p>
+                        Click "+ Add Previous Paper"
+                        to add your first question paper.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+
+function showForm() {
+
+    document.getElementById("paper-form").style.display = "block";
+
+}
+
+
+function hideForm() {
+
+    document.getElementById("paper-form").style.display = "none";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

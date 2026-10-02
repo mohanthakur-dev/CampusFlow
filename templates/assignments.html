@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Assignments | CampusFlow</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="logo">
+        CampusFlow
+    </div>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/assignments">Assignments</a>
+    </nav>
+
+</header>
+
+
+<main>
+
+    <!-- Page Header -->
+
+    <section class="page-header">
+
+        <p class="tag">
+            ACADEMIC WORK
+        </p>
+
+        <h1>
+            Assignments
+        </h1>
+
+        <p class="subtitle">
+            Keep track of your assignments, deadlines and submission status.
+        </p>
+
+        <button
+            onclick="showForm()"
+            class="add-button">
+
+            + Add Assignment
+
+        </button>
+
+    </section>
+
+
+
+    <!-- Add Assignment Form -->
+
+    <section
+        id="assignment-form"
+        class="form-box">
+
+        <h2>
+            Add New Assignment
+        </h2>
+
+
+        <form
+            action="/add_assignment"
+            method="POST">
+
+            <input
+                type="text"
+                name="subject"
+                placeholder="Subject"
+                required>
+
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Assignment title"
+                required>
+
+
+            <input
+                type="date"
+                name="deadline"
+                required>
+
+
+            <div class="form-buttons">
+
+                <button type="submit">
+                    Add Assignment
+                </button>
+
+
+                <button
+                    type="button"
+                    onclick="hideForm()"
+                    class="cancel-button">
+
+                    Cancel
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+
+    <!-- Assignment List -->
+
+    <section class="assignment-list">
+
+        {% if assignments %}
+
+            {% for assignment in assignments %}
+
+            <div class="assignment-card">
+
+                <div>
+
+                    <h2>
+                        {{ assignment["subject"] }} -
+                        {{ assignment["title"] }}
+                    </h2>
+
+                    <p>
+                        Deadline: {{ assignment["deadline"] }}
+                    </p>
+
+                </div>
+
+
+                <!-- ACTION BUTTONS -->
+
+                <div class="assignment-actions">
+
+                    <!-- Pending / Completed Toggle -->
+
+                    <form
+                        action="/toggle_assignment/{{ assignment['id'] }}"
+                        method="POST">
+
+                        {% if assignment["status"] == "Pending" %}
+
+                            <button
+                                type="submit"
+                                class="pending-button">
+
+                                Pending
+
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                type="submit"
+                                class="completed-button">
+
+                                ✓ Completed
+
+                            </button>
+
+                        {% endif %}
+
+                    </form>
+
+
+                    <!-- Delete Button -->
+
+                    <form
+                        action="/delete_assignment/{{ assignment['id'] }}"
+                        method="POST"
+                        onsubmit="return confirm('Delete this assignment?');">
+
+                        <button
+                            type="submit"
+                            class="delete-button">
+
+                            🗑 Delete
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+
+        {% else %}
+
+            <p>
+                No assignments added yet.
+            </p>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+
+
+<script>
+
+function showForm() {
+
+    document.getElementById("assignment-form").style.display = "block";
+
+}
+
+
+function hideForm() {
+
+    document.getElementById("assignment-form").style.display = "none";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

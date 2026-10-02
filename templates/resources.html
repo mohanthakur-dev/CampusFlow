@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Notes & Resources | CampusFlow</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        CampusFlow
+    </div>
+
+
+    <nav>
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/assignments">
+            Assignments
+        </a>
+
+        <a href="/lab-records">
+            Lab Records
+        </a>
+
+        <a href="/resources">
+            Resources
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<main>
+
+
+    <!-- PAGE HEADER -->
+
+    <section class="page-header">
+
+        <p class="tag">
+            STUDY MATERIAL
+        </p>
+
+
+        <h1>
+            Notes & Resources
+        </h1>
+
+
+        <p class="subtitle">
+            Keep your notes, PDFs and useful study links
+            in one place.
+        </p>
+
+
+        <button
+            onclick="showForm()"
+            class="add-button">
+
+            + Add Resource
+
+        </button>
+
+    </section>
+
+
+
+    <!-- ADD RESOURCE FORM -->
+
+    <section
+        id="resource-form"
+        class="form-box">
+
+
+        <h2>
+            Add New Resource
+        </h2>
+
+
+        <form
+            action="/add_resource"
+            method="POST">
+
+
+            <input
+                type="text"
+                name="subject"
+                placeholder="Subject"
+                required>
+
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Resource title"
+                required>
+
+
+            <select
+                name="resource_type"
+                required>
+
+                <option value="">
+                    Select resource type
+                </option>
+
+                <option value="Notes">
+                    Notes
+                </option>
+
+                <option value="PDF">
+                    PDF
+                </option>
+
+                <option value="Link">
+                    Link
+                </option>
+
+            </select>
+
+
+            <input
+                type="url"
+                name="link"
+                placeholder="Resource link (optional)">
+
+
+            <div class="form-buttons">
+
+
+                <button type="submit">
+                    Add Resource
+                </button>
+
+
+                <button
+                    type="button"
+                    onclick="hideForm()"
+                    class="cancel-button">
+
+                    Cancel
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </section>
+
+
+
+    <!-- RESOURCE LIST -->
+
+    <section class="assignment-list">
+
+
+        {% if resources %}
+
+
+            {% for resource in resources %}
+
+
+            <div class="assignment-card">
+
+
+                <div>
+
+                    <p class="tag">
+                        {{ resource["resource_type"] }}
+                    </p>
+
+
+                    <h2>
+                        {{ resource["subject"] }}
+                        -
+                        {{ resource["title"] }}
+                    </h2>
+
+
+                    {% if resource["link"] %}
+
+                        <p>
+
+                            <a
+                                href="{{ resource['link'] }}"
+                                target="_blank">
+
+                                Open Resource →
+
+                            </a>
+
+                        </p>
+
+                    {% else %}
+
+                        <p>
+                            No link added.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- DELETE -->
+
+                <form
+                    action="/delete_resource/{{ resource['id'] }}"
+                    method="POST"
+                    onsubmit="return confirm('Delete this resource?');">
+
+
+                    <button
+                        type="submit"
+                        class="delete-button">
+
+                        🗑 Delete
+
+                    </button>
+
+
+                </form>
+
+
+            </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="assignment-card">
+
+                <div>
+
+                    <h2>
+                        No resources yet
+                    </h2>
+
+                    <p>
+                        Click "+ Add Resource" to add your first study material.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+
+function showForm() {
+
+    document.getElementById("resource-form").style.display = "block";
+
+}
+
+
+function hideForm() {
+
+    document.getElementById("resource-form").style.display = "none";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

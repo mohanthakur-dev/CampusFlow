@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Class Updates | CampusFlow</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        CampusFlow
+    </div>
+
+    <nav>
+
+        <a href="/">Home</a>
+
+        <a href="/dashboard">Dashboard</a>
+
+        <a href="/assignments">Assignments</a>
+
+        <a href="/lab-records">Lab Records</a>
+
+        <a href="/resources">Resources</a>
+
+        <a href="/class-updates">Updates</a>
+
+    </nav>
+
+</header>
+
+
+
+<main>
+
+
+    <section class="page-header">
+
+        <p class="tag">
+            CLASS INFORMATION
+        </p>
+
+        <h1>
+            Class Updates
+        </h1>
+
+        <p class="subtitle">
+            Keep important class announcements and
+            reminders in one place.
+        </p>
+
+        <button
+            onclick="showForm()"
+            class="add-button">
+
+            + Add Update
+
+        </button>
+
+    </section>
+
+
+
+    <!-- ADD UPDATE -->
+
+    <section
+        id="update-form"
+        class="form-box">
+
+
+        <h2>
+            Add Class Update
+        </h2>
+
+
+        <form
+            action="/add_class_update"
+            method="POST">
+
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Update title"
+                required>
+
+
+            <textarea
+                name="message"
+                placeholder="Write announcement or reminder..."
+                rows="5"
+                required></textarea>
+
+
+            <input
+                type="date"
+                name="date"
+                required>
+
+
+            <div class="form-buttons">
+
+                <button type="submit">
+                    Add Update
+                </button>
+
+                <button
+                    type="button"
+                    onclick="hideForm()"
+                    class="cancel-button">
+
+                    Cancel
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </section>
+
+
+
+    <!-- UPDATES -->
+
+    <section class="assignment-list">
+
+
+        {% if updates %}
+
+
+            {% for update in updates %}
+
+
+            <div class="assignment-card">
+
+
+                <div>
+
+                    <p class="tag">
+                        {{ update["date"] }}
+                    </p>
+
+
+                    <h2>
+                        {{ update["title"] }}
+                    </h2>
+
+
+                    <p>
+                        {{ update["message"] }}
+                    </p>
+
+                </div>
+
+
+                <form
+                    action="/delete_class_update/{{ update['id'] }}"
+                    method="POST"
+                    onsubmit="return confirm('Delete this update?');">
+
+
+                    <button
+                        type="submit"
+                        class="delete-button">
+
+                        🗑 Delete
+
+                    </button>
+
+
+                </form>
+
+
+            </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="assignment-card">
+
+                <div>
+
+                    <h2>
+                        No class updates yet
+                    </h2>
+
+                    <p>
+                        Add announcements and reminders here.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+
+<script>
+
+function showForm() {
+
+    document.getElementById("update-form").style.display = "block";
+
+}
+
+
+function hideForm() {
+
+    document.getElementById("update-form").style.display = "none";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

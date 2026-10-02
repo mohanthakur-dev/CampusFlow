@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | CampusFlow</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        CampusFlow
+    </div>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/dashboard" class="active">Dashboard</a>
+        <a href="/assignments">Assignments</a>
+        <a href="/lab-records">Lab Records</a>
+        <a href="/resources">Resources</a>
+        <a href="/class-updates">Updates</a>
+        <a href="/previous-papers">Papers</a>
+    </nav>
+
+</header>
+
+
+<main class="dashboard">
+
+    <!-- HEADER -->
+
+    <section class="dashboard-header">
+
+        <p class="tag">
+            OVERVIEW
+        </p>
+
+        <h1>
+            Your Dashboard
+        </h1>
+
+        <p class="subtitle">
+            Everything you need to keep your college work organized in one place.
+        </p>
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section class="dashboard-stats">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📚
+            </div>
+
+            <h3>
+                Assignments
+            </h3>
+
+            <div class="stat-number">
+                {{ total_assignments }}
+            </div>
+
+            <p class="stat-detail">
+                {{ pending_assignments }} pending
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🧪
+            </div>
+
+            <h3>
+                Lab Records
+            </h3>
+
+            <div class="stat-number">
+                {{ total_labs }}
+            </div>
+
+            <p class="stat-detail">
+                {{ pending_labs }} pending
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ⏰
+            </div>
+
+            <h3>
+                Upcoming Deadlines
+            </h3>
+
+            <div class="stat-number">
+                {{ total_deadlines }}
+            </div>
+
+            <p class="stat-detail">
+                Need attention
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- UPCOMING WORK -->
+
+<section class="dashboard-section">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="section-label">
+                DEADLINES
+            </p>
+
+            <h2>
+                Upcoming Work
+            </h2>
+        </div>
+
+        <a href="/deadlines">
+            View all →
+        </a>
+
+    </div>
+
+
+    {% if upcoming %}
+
+        <div class="dashboard-list">
+
+            {% for item in upcoming %}
+
+                <div class="dashboard-work-card">
+
+                    <div class="work-icon">
+                        {% if item["type"] == "Assignment" %}
+                            📚
+                        {% else %}
+                            🧪
+                        {% endif %}
+                    </div>
+
+
+                    <div class="work-info">
+
+                        <span class="work-type">
+                            {{ item["type"] }}
+                        </span>
+
+                        <h3>
+                            {{ item["title"] }}
+                        </h3>
+
+                        <p>
+                            {{ item["subject"] }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="work-deadline">
+
+                        <span class="deadline-relative"
+                              data-deadline="{{ item['deadline'] }}">
+                        </span>
+
+                        <strong>
+                            {{ item["deadline"] }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-card">
+
+            <div class="empty-icon">
+                🎉
+            </div>
+
+            <h3>
+                No upcoming work
+            </h3>
+
+            <p>
+                You're all caught up for now.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<script>
+
+document.querySelectorAll(".deadline-relative").forEach(function(element) {
+
+    const deadline = new Date(element.dataset.deadline);
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+    deadline.setHours(0, 0, 0, 0);
+
+    const difference =
+        Math.round((deadline - today) / (1000 * 60 * 60 * 24));
+
+    if (difference < 0) {
+        element.textContent = "Overdue";
+    }
+    else if (difference === 0) {
+        element.textContent = "Due Today";
+    }
+    else if (difference === 1) {
+        element.textContent = "Due Tomorrow";
+    }
+    else if (difference <= 7) {
+        element.textContent = "Due in " + difference + " days";
+    }
+    else {
+        element.textContent = "Upcoming";
+    }
+
+});
+
+</script>
+
+    <!-- LATEST UPDATE -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">
+                    CLASS
+                </p>
+
+                <h2>
+                    Latest Class Update
+                </h2>
+            </div>
+
+            <a href="/class-updates">
+                View all →
+            </a>
+
+        </div>
+
+
+        {% if latest_update %}
+
+            <div class="update-card">
+
+                <div class="update-icon">
+                    📢
+                </div>
+
+                <div>
+
+                    <span class="update-date">
+                        {{ latest_update["date"] }}
+                    </span>
+
+                    <h3>
+                        {{ latest_update["title"] }}
+                    </h3>
+
+                    <p>
+                        {{ latest_update["message"] }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-card">
+
+                <div class="empty-icon">
+                    📢
+                </div>
+
+                <h3>
+                    No updates yet
+                </h3>
+
+                <p>
+                    Class announcements will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- QUICK ACCESS -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="section-label">
+                    SHORTCUTS
+                </p>
+
+                <h2>
+                    Quick Access
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="quick-access">
+
+            <a href="/assignments" class="quick-card">
+                <span>📚</span>
+                <strong>Assignments</strong>
+            </a>
+
+            <a href="/lab-records" class="quick-card">
+                <span>🧪</span>
+                <strong>Lab Records</strong>
+            </a>
+
+            <a href="/resources" class="quick-card">
+                <span>📄</span>
+                <strong>Notes</strong>
+            </a>
+
+            <a href="/class-updates" class="quick-card">
+                <span>📢</span>
+                <strong>Updates</strong>
+            </a>
+
+            <a href="/deadlines" class="quick-card">
+                <span>📅</span>
+                <strong>Deadlines</strong>
+            </a>
+
+            <a href="/previous-papers" class="quick-card">
+                <span>📝</span>
+                <strong>Papers</strong>
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

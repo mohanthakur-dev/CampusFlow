@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Deadlines | CampusFlow</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        CampusFlow
+    </div>
+
+    <nav>
+
+        <a href="/">Home</a>
+
+        <a href="/dashboard">Dashboard</a>
+
+        <a href="/assignments">Assignments</a>
+
+        <a href="/lab-records">Lab Records</a>
+
+        <a href="/resources">Resources</a>
+
+        <a href="/class-updates">Updates</a>
+
+        <a href="/deadlines">Deadlines</a>
+
+    </nav>
+
+</header>
+
+
+
+<main>
+
+
+    <section class="page-header">
+
+        <p class="tag">
+            SUBMISSION TRACKER
+        </p>
+
+        <h1>
+            Deadlines
+        </h1>
+
+        <p class="subtitle">
+            See your upcoming assignments and lab
+            record deadlines in one place.
+        </p>
+
+    </section>
+
+
+
+    <section class="assignment-list">
+
+
+        {% if deadlines %}
+
+
+            {% for item in deadlines %}
+
+
+            <div class="assignment-card">
+
+
+                <div>
+
+                    <p class="tag">
+                        {{ item["type"] }}
+                    </p>
+
+
+                    <h2>
+                        {{ item["subject"] }}
+                        -
+                        {{ item["title"] }}
+                    </h2>
+
+
+                    <p>
+                        Deadline:
+                        {{ item["deadline"] }}
+                    </p>
+
+                </div>
+
+
+                {% if item["status"] == "Completed" %}
+
+                    <span class="completed">
+                        ✓ Completed
+                    </span>
+
+                {% else %}
+
+                    <span class="pending">
+                        Pending
+                    </span>
+
+                {% endif %}
+
+
+            </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="assignment-card">
+
+                <div>
+
+                    <h2>
+                        No deadlines yet
+                    </h2>
+
+                    <p>
+                        Your assignment and lab deadlines
+                        will appear here.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>
