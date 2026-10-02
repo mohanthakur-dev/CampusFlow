@@ -81,6 +81,11 @@ def init_db():
     conn.close()
 
 
+# Initialize database when the app starts
+# This is required for both local Flask and Gunicorn/Render.
+init_db()
+
+
 # ================= HOME =================
 
 @app.route("/")
@@ -640,7 +645,5 @@ def dashboard():
 # ================= START APP =================
 
 if __name__ == "__main__":
-
-    init_db()
 
     app.run(debug=True)
